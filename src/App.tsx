@@ -9,7 +9,11 @@ import usePoseDetection from './hooks/usePoseDetection';
 function App() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const { videoRef, isStreaming, toggleWebcam, toggleAspectRatio } = useWebcam();
-    const {isDetecting, setIsDetecting} = usePoseDetection(videoRef, canvasRef)
+    const {
+        isDetecting, 
+        setIsDetecting,
+        stats:exerciseStats
+    } = usePoseDetection(videoRef, canvasRef)
 
     useEffect(() => {
         if (isDetecting) {
@@ -33,9 +37,55 @@ function App() {
                     <canvas
                         ref={canvasRef}
                         className={cn(
-                            "absolute top-0 border w-full aspect-video",
+                            "absolute top-0 border w-full aspect-video"
                         )}
                     ></canvas>
+                    {isDetecting && (
+                        <div className="absolute top-0 p-0 rounded text-white w-full h-full">
+                            <div className="relative w-full h-full border-red-500 border">
+                                <div className="absolute top-4 left-4 space-y-2">
+                                    <div className=" rounded border bg-white font-semibold p-2 text-center text-black">
+                                        <p>Count</p>
+                                        {exerciseStats.repCount}
+                                    </div>
+                                    <div className=" rounded border bg-white font-semibold p-2 text-center text-black">
+                                        <p>Elbow</p>
+                                        {exerciseStats.elbowAngle.toFixed(1)}°
+                                    </div>
+                                    <div className=" rounded border bg-white font-semibold p-2 text-center text-black">
+                                        <p>Upper</p>
+                                        {exerciseStats.upperBodyAngle.toFixed(
+                                            1
+                                        )}
+                                        °
+                                    </div>
+                                    <div className=" rounded border bg-white font-semibold p-2 text-center text-black">
+                                        <p>Lower</p>
+                                        {exerciseStats.lowerBodyAngle.toFixed(
+                                            1
+                                        )}
+                                        °
+                                    </div>
+                                </div>
+
+                                <div className="absolute w-lg bottom-4 left-1/2 -translate-x-1/2 rounded border bg-white font-semibold p-2 text-center text-black">
+                                    <p>Feedback</p>
+                                    {exerciseStats.feedback}
+                                </div>
+
+                                <div className="flex absolute top-4 right-4 gap-2">
+                                    <div className="rounded border bg-white font-semibold p-2 text-center text-black">
+                                        <p>Form</p>
+                                        {exerciseStats.formQuality}
+                                    </div>
+                                    <div className="rounded border bg-white font-semibold p-2 text-center text-black">
+                                        <p>Position</p>
+                                        {exerciseStats.currentState}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 

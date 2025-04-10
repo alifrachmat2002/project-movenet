@@ -4,6 +4,7 @@ import "@tensorflow/tfjs-backend-webgl"; // WebGL acceleration
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { toast } from "sonner";
 import { clearCanvas, drawResult } from "@/utils/drawer.utils";
+import { usePushupDetection } from "./usePushupDetection";
 
 export default function usePoseDetection(
     videoRef: React.RefObject<HTMLVideoElement | null>,
@@ -14,6 +15,8 @@ export default function usePoseDetection(
         null
     );
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    const { detectPushup, resetCounter, stats } = usePushupDetection();
 
     const loadmodel = async () => {
         await tf.setBackend("webgl");
@@ -40,6 +43,7 @@ export default function usePoseDetection(
             }
 
             const poses = await detector.estimatePoses(videoRef.current);
+            detectPushup(poses);
             drawResult(poses,canvasRef, videoRef);
             // console.log(poses);
 
@@ -72,6 +76,7 @@ export default function usePoseDetection(
                 console.log("stopping detection");
                 clearInterval(intervalRef.current);
                 clearCanvas(canvasRef);
+                resetCounter();
                 toast("Stopped", {
                     description: "Pose Detection Stopped.",
                 });
@@ -87,5 +92,5 @@ export default function usePoseDetection(
         };
     }, [isDetecting]);
 
-    return { isDetecting, setIsDetecting };
+    return { isDetecting, setIsDetecting, stats };
 };

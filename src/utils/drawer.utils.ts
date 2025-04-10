@@ -1,6 +1,7 @@
+import poseConstants from "@/constants/pose.constants";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 
-const THRESHOLD = 0.3;
+const THRESHOLD = poseConstants.CONFIDENCE_THRESHOLD;
 
 export const drawKeypoints = (
     ctx: CanvasRenderingContext2D,
@@ -10,6 +11,7 @@ export const drawKeypoints = (
     
     pose.keypoints.forEach((keypoint) => {
         if (keypoint.score && keypoint.score > THRESHOLD) {
+            ctx.fillStyle = "red";
             ctx.beginPath();
             ctx.arc(keypoint.x, keypoint.y, 5, 0, 2 * Math.PI);
             ctx.fill();
