@@ -23,7 +23,7 @@ function App() {
 
     return (
         <div className="flex flex-col items-center min-h-screen p-4">
-            <h1 className="text-3xl font-bold mb-6">Webcam Interface</h1>
+            <h1 className="text-3xl font-bold mb-6">Push-up Counter</h1>
 
             <Card className="w-full max-w-2xl mb-6 p-0 ">
                 <CardContent className="relative h-full p-0 overflow-hidden rounded-lg">
